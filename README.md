@@ -76,27 +76,22 @@ Basado en el siguiente linked link:
 
 https://replit.com/@RubenDemetrioDemetrio/poo2singlelinkedlist#linked_list.h
 
-Modificarlo lo que sea necesario para que permita soportar `pop_front` y `push_front` de valores concurrentemente.
-
-**NOTA:** El `std::mutex` debera ser agregado dentro del `linked_list_t`
+Modificarlo para que permita soportar `pop_front` y `push_front` de valores concurrentemente.
 
 **Casos de uso**
 ```cpp
-    // Linked list
     linked_list_t<int> ll;
-
+    // cantidad
+    int nhilos = {};
+    cin >> nhilos;
     // Hilos
     vector <thread> vhilos(nhilos);
-
-    // cantidad
-    int n = 0;
-    cin >> n;
-    for (int i = 0; i < nhilos - nhilos/4; ++i) {
+    for (int i = 0; i < nhilos - nhilos/4; ++i)
         vhilos[i] = thread([&ll, i] { ll.push_front(i); });
-    }
-    for (int i = 0; i < nhilos/4; ++i) {
-        h = thread([&ll] { ll.pop_front(); });
-    }
+    for (int i = nhilos - nhilos/4; i < nhilos; ++i)
+        vhilos[i] = thread([&ll] { ll.pop_front(); });
+    for (auto& hilo: vhilos) hilo.join();
+    // Resultado
     cout << ll.size() << endl;
 ```
 

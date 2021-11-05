@@ -11,24 +11,19 @@
 using namespace std;
 
 static void question_4() {
-    linked_list<int> ll = {1, 2, 3, 4};
-    for (auto item: ll) { cout << item << " "; }
-    cout << endl;
-
-    vector<thread> vt(10);
-    auto i = 0;
-    for (auto& t: vt) {
-        t = thread([&ll, i = ++i]{
-            ll.push_front(i);
-        });
-    }
-    for (auto& t: vt) t.join();
-
-    cout << accumulate(ll.begin(), ll.end(), 0) << " " << endl;
-
-    for (auto item: ll)
-        cout << item << " ";
-    cout << endl;
+    linked_list_t<int> ll;
+    // cantidad
+    int nhilos = {};
+    cin >> nhilos;
+    // Hilos
+    vector <thread> vhilos(nhilos);
+    for (int i = 0; i < nhilos - nhilos/4; ++i)
+        vhilos[i] = thread([&ll, i] { ll.push_front(i); });
+    for (int i = nhilos - nhilos/4; i < nhilos; ++i)
+        vhilos[i] = thread([&ll] { ll.pop_front(); });
+    for (auto& hilo: vhilos) hilo.join();
+    // Resultado
+    cout << ll.size() << endl;
 }
 
 TEST_CASE("Question #4") {
